@@ -1,6 +1,31 @@
-#Required packages
-## mlbench
-## readr 
+---
+title: "Business Intelligence Lab 4"
+author: "Chicken-nuggets"
+date: "15th october 2023"
+output:
+  github_document: 
+    toc: yes
+    toc_depth: 4
+    fig_width: 6
+    fig_height: 4
+    df_print: default
+editor_options:
+  chunk_output_type: console
+---
+
+# Student Details
+
++--------------------------------+-------------------------------+
+| **Student ID Number and Name** | 1.  137118 Fatoumata Camara   |
+|                                | 2.  127039 Ayan Ahmed         |
+|                                | 3.  136869 Birkanwal Bhambra  |
+|                                | 4.  127602 Trevor Anjere      |
+|                                | 5.  133824 Habiba Siba        |
++--------------------------------+-------------------------------+
+| **BBIT 4.2 Group**             | Chicken-nuggets               |
++--------------------------------+-------------------------------+
+
+```{r Required Packages}
 if (require("readr")) {
   require("readr")
 } else {
@@ -8,7 +33,7 @@ if (require("readr")) {
                    repos = "https://cloud.r-project.org")
 }
 
-## caret 
+
 if (require("caret")) {
   require("caret")
 } else {
@@ -16,7 +41,6 @@ if (require("caret")) {
                    repos = "https://cloud.r-project.org")
 }
 
-## e1071 
 if (require("e1071")) {
   require("e1071")
 } else {
@@ -24,7 +48,6 @@ if (require("e1071")) {
                    repos = "https://cloud.r-project.org")
 }
 
-## factoextra 
 if (require("factoextra")) {
   require("factoextra")
 } else {
@@ -32,7 +55,6 @@ if (require("factoextra")) {
                    repos = "https://cloud.r-project.org")
 }
 
-## FactoMineR 
 if (require("FactoMineR")) {
   require("FactoMineR")
 } else {
@@ -40,13 +62,15 @@ if (require("FactoMineR")) {
                    repos = "https://cloud.r-project.org")
 }
 
-#step 1 : loading dataset
+```
 
+```{r Loading the Student performance Dataset}
 library(readr)
 StudentPerformanceDataset <- read_csv("data/StudentPerformanceDataset.csv")
 View(StudentPerformanceDataset)
+```
 
-
+```{r Scale Data Transform}
 ##visualization using histogram----
 #Histogram before transformation
 summary(StudentPerformanceDataset)
@@ -139,9 +163,9 @@ hist(StudentPerformanceDataset_scale_transform$EXAM, main = "Bar Plot of EXAM",
 
 hist(StudentPerformanceDataset_scale_transform$TOTAL, main = "Bar Plot of TOTAL Semester marks",
      xlab = "TOTAL Semester marks", ylab = "Frequency", col = "red")
+```
 
-
-## The Centre Basic Transform----
+```{r  The Centre Basic Transform}
 #visualization using Boxplot
 #Boxplot before transformation
 summary(StudentPerformanceDataset)
@@ -237,8 +261,10 @@ boxplot(StudentPerformanceDataset_center_transform$EXAM, main = "Boxplot of EXAM
 boxplot(StudentPerformanceDataset_center_transform$TOTAL, main = "Boxplot of TOTAL Semester marks",
         xlab = "TOTAL Semester marks", ylab = "Frequency", col = "red")
 
+```
 
-##Standardize Data Transform--
+```{r Standardize Data Transform}
+#ensures that each numeric attribute has a mean value of 0 and a standard deviation of 1
 summary(StudentPerformanceDataset)
 sapply(StudentPerformanceDataset[ ,-1 ], sd)
 
@@ -253,7 +279,9 @@ summary(StudentPerformanceDataset_standardize_transform)
 sapply(StudentPerformanceDataset_standardize_transform[, -1], sd)
 
 
-## Normalizing Data Transform---
+```
+
+```{r Normalizing Data Transform}
 summary(StudentPerformanceDataset)
 model_of_the_transform <- preProcess(StudentPerformanceDataset, method = c("range"))
 print(model_of_the_transform)
@@ -261,107 +289,10 @@ StudentPerformanceDataset_normalize_transform <- predict(model_of_the_transform,
                                                          StudentPerformanceDataset)
 summary(StudentPerformanceDataset_normalize_transform)
 
-## Performing Box-Cox Power Transform----
-# BEFORE
-summary(StudentPerformanceDataset)
-
-#Calculating the skewness before 
-sapply(StudentPerformanceDataset[, -3],  skewness, type = 2)
-
-# histogram to view the skewness before the Box-Cox transform
-
-hist(StudentPerformanceDataset$YOB, main = "Bar Plot of gender",
-     xlab = "YOB", ylab = "Frequency", col = "purple")
-
-hist(StudentPerformanceDataset$anticipate_test_questions, main = "Bar Plot of Anticipate test questions",
-     xlab = "Anticipate test Questions", ylab = "Frequency", col = "blue")
-
-hist(StudentPerformanceDataset$gender, main = "Bar Plot of YOB",
-     xlab = "Gender", ylab = "Frequency", col = "yellow")
-
-hist(StudentPerformanceDataset$A1, main = "Bar Plot of enjoyin the Unit",
-     xlab = "Bar Plot of enjoying the Unit", ylab = "Frequency", col = "blue")
+```
 
 
-hist(StudentPerformanceDataset$Average_Rating, main = "Average_Rating",
-     xlab = "Average_Rating", ylab = "Frequency", col = "pink")
-
-
-hist(StudentPerformanceDataset$Quizzes, main = "Bar Plot of Quizzes",
-     xlab = "Quizzes", ylab = "Frequency", col = "blue")
-
-
-hist(StudentPerformanceDataset$LabWork, main = "Bar Plot of LabWork",
-     xlab = "LabWork ", ylab = "Frequency", col = "pink")
-
-
-hist(StudentPerformanceDataset$CAT1, main = "Bar Plot of CAT1",
-     xlab = "CAT1", ylab = "Frequency", col = "blue")
-
-hist(StudentPerformanceDataset$CAT2, main = "Bar Plot of CAT 2",
-     xlab = "CAT2", ylab = "Frequency", col = "purple")
-
-hist(StudentPerformanceDataset$Coursework, main = "Bar Plot of Coursework",
-     xlab = "Coursework", ylab = "Frequency", col = "pink")
-
-hist(StudentPerformanceDataset$EXAM, main = "Bar Plot of EXAM",
-     xlab = "EXAM", ylab = "Frequency", col = "blue")
-
-hist(StudentPerformanceDataset$TOTAL, main = "Bar Plot of TOTAL Semester marks",
-     xlab = "TOTAL Semester marks", ylab = "Frequency", col = "red")
-
-#transformation
-# Apply Box-Cox transformation
-model_of_the_transform <- preProcess(StudentPerformanceDataset, method = c("BoxCox"))
-StudentPerformanceDataset_box_cox_transform <- predict(model_of_the_transform, StudentPerformanceDataset)
-#After Transformation
-
-summary(StudentPerformanceDataset_box_cox_transform)
-
-sapply(StudentPerformanceDataset_box_cox_transform[, -1],  skewness, type = 2)
-
-hist(StudentPerformanceDataset_box_cox_transform$YOB, main = "Bar Plot of gender",
-     xlab = "YOB", ylab = "Frequency", col = "purple")
-
-hist(StudentPerformanceDataset_box_cox_transform$anticipate_test_questions, main = "Bar Plot of Anticipate test questions",
-     xlab = "Anticipate test Questions", ylab = "Frequency", col = "blue")
-
-hist(StudentPerformanceDataset_box_cox_transform$gender, main = "Bar Plot of YOB",
-     xlab = "Gender", ylab = "Frequency", col = "yellow")
-
-hist(StudentPerformanceDataset_box_cox_transform$A1, main = "Bar Plot of enjoyin the Unit",
-     xlab = "Bar Plot of enjoying the Unit", ylab = "Frequency", col = "blue")
-
-
-hist(StudentPerformanceDataset_box_cox_transform$Average_Rating, main = "Average_Rating",
-     xlab = "Average_Rating", ylab = "Frequency", col = "pink")
-
-
-hist(StudentPerformanceDataset_box_cox_transform$Quizzes, main = "Bar Plot of Quizzes",
-     xlab = "Quizzes", ylab = "Frequency", col = "blue")
-
-
-hist(StudentPerformanceDataset_box_cox_transform$LabWork, main = "Bar Plot of LabWork",
-     xlab = "LabWork ", ylab = "Frequency", col = "pink")
-
-
-hist(StudentPerformanceDataset_box_cox_transform$CAT1, main = "Bar Plot of CAT1",
-     xlab = "CAT1", ylab = "Frequency", col = "blue")
-
-hist(StudentPerformanceDataset_box_cox_transform$CAT2, main = "Bar Plot of CAT 2",
-     xlab = "CAT2", ylab = "Frequency", col = "purple")
-
-hist(StudentPerformanceDataset_box_cox_transform$Coursework, main = "Bar Plot of Coursework",
-     xlab = "Coursework", ylab = "Frequency", col = "pink")
-
-hist(StudentPerformanceDataset_box_cox_transform$EXAM, main = "Bar Plot of EXAM",
-     xlab = "EXAM", ylab = "Frequency", col = "blue")
-
-hist(StudentPerformanceDataset_box_cox_transform$TOTAL, main = "Bar Plot of TOTAL Semester marks",
-     xlab = "TOTAL Semester marks", ylab = "Frequency", col = "red")
-
-
-## Applying a Yeo-Johnson Power Transform ----
+```{r Applying a Yeo-Johnson Power Transform}
 summary(StudentPerformanceDataset)
 
 #Calculating the skewness before 
@@ -461,8 +392,11 @@ hist(StudentPerformanceDataset_yeo_johnson_transform$EXAM, main = "Bar Plot of E
 hist(StudentPerformanceDataset_yeo_johnson_transform$TOTAL, main = "Bar Plot of TOTAL Semester marks",
      xlab = "TOTAL Semester marks", ylab = "Frequency", col = "red")
 
-##(PCA) Linear Algebra Transform ----
+```
 
+
+
+```{r performing (PCA) Linear Algebra Transform}
 summary(StudentPerformanceDataset)
 
 model_of_the_transform <- preProcess(StudentPerformanceDataset, method =
@@ -471,8 +405,11 @@ model_of_the_transform <- preProcess(StudentPerformanceDataset, method =
 print(model_of_the_transform)
 StudentPerformanceDataset_pca_dr <- predict(model_of_the_transform, StudentPerformanceDataset)
 summary(StudentPerformanceDataset_pca_dr)
+```
 
-##PCA Linear Algebra Transform for Feature Extraction ----
+
+```{r Performing PCA Linear Algebra Transform for Feature Extraction and visualizing }
+
 StudentPerformanceDataset_pca_fe <- princomp(cor(StudentPerformanceDataset[, -1]))
 summary(StudentPerformanceDataset_pca_fe)
 
@@ -490,7 +427,14 @@ factoextra::fviz_pca_var(StudentPerformanceDataset_pca_fe, col.var = "cos2",
                          gradient.cols = c("purple", "red", "yellow"),
                          repel = TRUE)
 
-##ICA Linear Algebra Transform for Dimensionality Reduction ----
+
+
+```
+
+
+
+```{r Performing ICA Linear Algebra Transform for Dimensionality Reduction}
+
 if (!is.element("fastICA", installed.packages()[, 1])) {
   install.packages("fastICA", dependencies = TRUE)
 }
@@ -505,5 +449,5 @@ StudentPerformanceDataset_ica_dr <- predict(model_of_the_transform, StudentPerfo
 
 summary(StudentPerformanceDataset_ica_dr)
 
-
+```
 
